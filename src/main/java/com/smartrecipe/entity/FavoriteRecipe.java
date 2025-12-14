@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 
 public class FavoriteRecipe {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

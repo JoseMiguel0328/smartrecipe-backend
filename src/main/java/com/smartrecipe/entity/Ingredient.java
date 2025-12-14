@@ -3,6 +3,8 @@ package com.smartrecipe.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "ingredients")
 @Getter
@@ -19,5 +21,8 @@ public class Ingredient {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
+    private List<RecipeIngredient> recipes;
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -33,5 +34,14 @@ public class User {
 
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    private List<Recipe> recipes;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<FavoriteRecipe> favoriteRecipes;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserAllergy> allergies;
 
 }
