@@ -12,7 +12,7 @@
 	<artifactId>smartrecipe-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SmartRecipe</name>
-	<description>Demo project for Spring Boot</description>
+	<description>SmartRecipe project with Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
