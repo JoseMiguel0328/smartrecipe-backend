@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Table(name = "favorite_recipes")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 
 public class FavoriteRecipe {
