@@ -8,4 +8,7 @@ import java.util.List;
 public interface UserAllergyRepository extends JpaRepository<UserAllergy, Long> {
 
     List<UserAllergy> findByUserId(Long userId);
+
+    boolean existsByAllergyId(Long allergyId);
+
 }

@@ -10,4 +10,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByIsPublicTrue();
 
     List<Recipe> findByAuthorId(Long authorId);
+
+    boolean existsByCuisineId(Long cuisineId);
+
 }
