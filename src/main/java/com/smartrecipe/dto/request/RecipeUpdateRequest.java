@@ -1,13 +1,10 @@
 package com.smartrecipe.dto.request;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+public class RecipeUpdateRequest {
 
-public class RecipeCreateRequest {
-
-    @NotBlank(message = "Recipe title cannot be blank")
     @Size(min = 3, max = 200, message = "Title must be between 3 and 200 characters")
     private String title;
 

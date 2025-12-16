@@ -1,5 +1,6 @@
 package com.smartrecipe.service;
 
+import com.smartrecipe.entity.Cuisine;
 import com.smartrecipe.entity.Recipe;
 import com.smartrecipe.entity.User;
 import com.smartrecipe.repository.RecipeRepository;
@@ -17,16 +18,19 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final UserService userService;
+    private final CuisineService cuisineService;
 
     public RecipeService(
             RecipeRepository recipeRepository,
-            UserService userService
+            UserService userService,
+            CuisineService cuisineService
     ) {
         this.recipeRepository = recipeRepository;
         this.userService = userService;
+        this.cuisineService = cuisineService;
     }
 
-    public Recipe createRecipe(Recipe recipe, Long authorId) {
+    public Recipe createRecipe(Recipe recipe, Long authorId, Long cuisineId) {
         User author = userService.findById(authorId).orElseThrow(() -> new IllegalArgumentException("Author not found with id: " + authorId));
 
         if (recipe.getTitle() == null || recipe.getTitle().trim().isEmpty()) {
@@ -35,6 +39,11 @@ public class RecipeService {
 
         if (recipe.getIsPublic() == null) {
             recipe.setIsPublic(false); // Default: privada
+        }
+
+        if (cuisineId != null) {
+            Cuisine cuisine = cuisineService.findById(cuisineId).orElseThrow(() -> new IllegalArgumentException("Cuisine not found with id: " + cuisineId));
+            recipe.setCuisine(cuisine);
         }
 
         recipe.setAuthor(author);
@@ -73,20 +82,19 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public List<Recipe> getRecipesByUser(Long userId) {
         if (!userService.findById(userId).isPresent()) {
-            throw new IllegalArgumentException(
-                    "User not found with id: " + userId
-            );
+            throw new IllegalArgumentException("User not found with id: " + userId);
         }
 
         return recipeRepository.findByAuthorId(userId);
     }
+
 
     @Transactional(readOnly = true)
     public List<Recipe> getAllRecipes() {
         return recipeRepository.findAll();
     }
 
-    public Recipe updateRecipe(Long recipeId, Recipe updatedRecipe) {
+    public Recipe updateRecipe(Long recipeId, Recipe updatedRecipe, Long cuisineId) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("Recipe not found with id: " + recipeId));
 
         if (updatedRecipe.getTitle() != null && !updatedRecipe.getTitle().trim().isEmpty()) {
@@ -108,6 +116,14 @@ public class RecipeService {
             recipe.setIsPublic(updatedRecipe.getIsPublic());
         }
 
+        if (cuisineId != null) {
+            Cuisine cuisine = cuisineService.findById(cuisineId)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Cuisine not found with id: " + cuisineId
+                    ));
+            recipe.setCuisine(cuisine);
+        }
+
         recipe.setUpdatedAt(LocalDateTime.now());
         return recipeRepository.save(recipe);
     }
@@ -123,6 +139,7 @@ public class RecipeService {
         recipe.setUpdatedAt(LocalDateTime.now());
         return recipeRepository.save(recipe);
     }
+
 
     public Recipe updateVisibility(Long recipeId, Boolean isPublic) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("Recipe not found with id: " + recipeId));
@@ -143,7 +160,9 @@ public class RecipeService {
 
     public void deleteRecipe(Long recipeId) {
         if (!recipeRepository.existsById(recipeId)) {
-            throw new IllegalArgumentException("Recipe not found with id: " + recipeId);
+            throw new IllegalArgumentException(
+                    "Recipe not found with id: " + recipeId
+            );
         }
         recipeRepository.deleteById(recipeId);
     }
@@ -156,5 +175,10 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public long countRecipesByUser(Long userId) {
         return recipeRepository.findByAuthorId(userId).size();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> getRecipesByCuisine(Long cuisineId) {
+        return recipeRepository.findByCuisineId(cuisineId);
     }
 }

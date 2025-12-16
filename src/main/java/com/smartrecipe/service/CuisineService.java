@@ -41,6 +41,11 @@ public class CuisineService {
         return cuisineRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Cuisine> findByName(String name) {
+        return cuisineRepository.findByNameIgnoreCase(name);
+    }
+
 
     @Transactional(readOnly = true)
     public List<Cuisine> findAll() {
@@ -65,6 +70,7 @@ public class CuisineService {
         return cuisineRepository.save(cuisine);
     }
 
+
     public void deleteCuisine(Long id) {
         if (!cuisineRepository.existsById(id)) {
             throw new IllegalArgumentException("Cuisine not found with id: " + id);
@@ -77,4 +83,5 @@ public class CuisineService {
 
         cuisineRepository.deleteById(id);
     }
+
 }

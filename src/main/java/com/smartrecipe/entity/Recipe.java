@@ -35,6 +35,10 @@ public class Recipe {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuisine_id")
+    private Cuisine cuisine;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

@@ -13,4 +13,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     boolean existsByCuisineId(Long cuisineId);
 
+    List<Recipe> findByCuisineId(Long cuisineId);
 }

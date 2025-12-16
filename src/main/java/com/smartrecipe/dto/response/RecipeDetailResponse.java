@@ -1,12 +1,9 @@
 package com.smartrecipe.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * DTO para respuesta de receta.
- * Incluye información básica + autor + cocina.
- */
-public class RecipeResponse {
+public class RecipeDetailResponse {
 
     private Long id;
     private String title;
@@ -14,18 +11,21 @@ public class RecipeResponse {
     private Integer preparationTime;
     private boolean isPublic;
 
-    // Información del autor
     private Long authorId;
     private String authorUsername;
 
-    // Información de la cocina (opcional)
     private Long cuisineId;
     private String cuisineName;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public RecipeResponse(
+    // Listas relacionadas
+    private List<RecipeIngredientResponse> ingredients;
+    private List<RecipeTagResponse> tags;
+
+    // Constructor
+    public RecipeDetailResponse(
             Long id,
             String title,
             String description,
@@ -36,7 +36,9 @@ public class RecipeResponse {
             Long cuisineId,
             String cuisineName,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            List<RecipeIngredientResponse> ingredients,
+            List<RecipeTagResponse> tags
     ) {
         this.id = id;
         this.title = title;
@@ -49,6 +51,8 @@ public class RecipeResponse {
         this.cuisineName = cuisineName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.ingredients = ingredients;
+        this.tags = tags;
     }
 
     // Getters
@@ -94,5 +98,13 @@ public class RecipeResponse {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public List<RecipeIngredientResponse> getIngredients() {
+        return ingredients;
+    }
+
+    public List<RecipeTagResponse> getTags() {
+        return tags;
     }
 }
