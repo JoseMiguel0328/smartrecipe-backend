@@ -2,6 +2,7 @@ package com.smartrecipe.service;
 
 import com.smartrecipe.entity.Allergy;
 import com.smartrecipe.repository.AllergyRepository;
+import com.smartrecipe.repository.UserAllergyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class AllergyService {
 
     private final AllergyRepository allergyRepository;
+    private final UserAllergyRepository userAllergyRepository;
 
-    public AllergyService(AllergyRepository allergyRepository) {
+    public AllergyService(AllergyRepository allergyRepository, UserAllergyRepository userAllergyRepository) {
         this.allergyRepository = allergyRepository;
+        this.userAllergyRepository = userAllergyRepository;
     }
 
 
@@ -79,10 +82,10 @@ public class AllergyService {
             throw new IllegalArgumentException("Allergy not found with id: " + id);
         }
 
-        // TODO: Validar que no esté siendo usada por usuarios
-        // if (userAllergyRepository.existsByAllergyId(id)) {
-        //     throw new IllegalStateException("Cannot delete allergy in use");
-        // }
+
+        if (userAllergyRepository.existsByAllergyId(id)) {
+            throw new IllegalStateException("Cannot delete allergy in use");
+        }
 
         allergyRepository.deleteById(id);
     }

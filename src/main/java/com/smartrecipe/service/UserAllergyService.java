@@ -33,10 +33,7 @@ public class UserAllergyService {
 
         Allergy allergy = allergyService.findById(allergyId).orElseThrow(() -> new IllegalArgumentException("Allergy not found with id: " + allergyId));
 
-        List<UserAllergy> existing = userAllergyRepository.findByUserId(userId);
-        boolean alreadyExists = existing.stream().anyMatch(ua -> ua.getAllergy().getId().equals(allergyId));
-
-        if (alreadyExists) {
+        if (userAllergyRepository.existsByUserIdAndAllergyId(userId, allergyId)) {
             throw new IllegalStateException("User already has this allergy registered");
         }
 
@@ -54,10 +51,7 @@ public class UserAllergyService {
 
         Allergy allergy = allergyService.findOrCreateByName(allergyName);
 
-        List<UserAllergy> existing = userAllergyRepository.findByUserId(userId);
-        boolean alreadyExists = existing.stream().anyMatch(ua -> ua.getAllergy().getId().equals(allergy.getId()));
-
-        if (alreadyExists) {
+        if (userAllergyRepository.existsByUserIdAndAllergyId(userId, allergy.getId())) {
             throw new IllegalStateException("User already has this allergy registered");
         }
 

@@ -43,6 +43,10 @@ public class RecipeIngredientService {
             throw new IllegalArgumentException("Unit cannot be empty");
         }
 
+        if (recipeIngredientRepository.existsByRecipeIdAndIngredientId(recipeId, ingredientId)) {
+            throw new IllegalStateException("Ingredient is already in this recipe");
+        }
+
         RecipeIngredient recipeIngredient = RecipeIngredient.builder()
                 .recipe(recipe)
                 .ingredient(ingredient)
@@ -66,6 +70,10 @@ public class RecipeIngredientService {
 
         if (unit == null || unit.trim().isEmpty()) {
             throw new IllegalArgumentException("Unit cannot be empty");
+        }
+
+        if (recipeIngredientRepository.existsByRecipeIdAndIngredientId(recipeId, ingredient.getId())) {
+            throw new IllegalStateException("Ingredient is already in this recipe");
         }
 
         RecipeIngredient recipeIngredient = RecipeIngredient.builder()

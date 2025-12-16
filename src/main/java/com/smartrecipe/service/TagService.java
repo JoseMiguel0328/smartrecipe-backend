@@ -1,6 +1,7 @@
 package com.smartrecipe.service;
 
 import com.smartrecipe.entity.Tag;
+import com.smartrecipe.repository.RecipeTagRepository;
 import com.smartrecipe.repository.TagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final RecipeTagRepository recipeTagRepository;
 
-    public TagService(TagRepository tagRepository) {
+    public TagService(TagRepository tagRepository, RecipeTagRepository recipeTagRepository) {
         this.tagRepository = tagRepository;
+        this.recipeTagRepository = recipeTagRepository;
     }
 
     public Tag findOrCreateByName(String name) {
@@ -76,10 +79,10 @@ public class TagService {
             throw new IllegalArgumentException("Tag not found with id: " + id);
         }
 
-        // TODO: Validar que no esté siendo usado en recetas
-        //if (recipeTagRepository.existsByTagId(id)) {
-        //     throw new IllegalStateException("Cannot delete tag in use");
-        // }
+
+        if (recipeTagRepository.existsByTagId(id)) {
+            throw new IllegalStateException("Cannot delete tag in use");
+        }
 
         tagRepository.deleteById(id);
     }

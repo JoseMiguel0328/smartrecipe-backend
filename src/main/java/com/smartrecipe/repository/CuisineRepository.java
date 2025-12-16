@@ -9,6 +9,6 @@ public interface CuisineRepository extends JpaRepository<Cuisine, Long> {
 
     Optional<Cuisine> findByNameIgnoreCase(String name);
 
-
+    boolean existsByNameIgnoreCase(String name);
 }
 

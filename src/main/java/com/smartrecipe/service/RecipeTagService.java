@@ -43,9 +43,9 @@ public class RecipeTagService {
             addedBy = userService.findById(addedByUserId).orElseThrow(() -> new IllegalArgumentException("User not found with id: " + addedByUserId));
         }
 
-        // TODO: Validar que el tag no esté ya asociado
-        // Necesitarías un método en el repository como:
-        // boolean existsByRecipeIdAndTagId(Long recipeId, Long tagId);
+        if (recipeTagRepository.existsByRecipeIdAndTagId(recipeId, tagId)) {
+            throw new IllegalStateException("Tag is already associated with this recipe");
+        }
 
         RecipeTag recipeTag = RecipeTag.builder()
                 .recipe(recipe)
@@ -57,7 +57,7 @@ public class RecipeTagService {
         return recipeTagRepository.save(recipeTag);
     }
 
-    public RecipeTag addTagToRecipeByName(Long recipeId, String tagName, Long addedByUserId) {
+    public RecipeTag addTagToRecipeByName(Long recipeId, Long tagId, String tagName, Long addedByUserId) {
         Recipe recipe = recipeService.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("Recipe not found with id: " + recipeId));
 
         Tag tag = tagService.findOrCreateByName(tagName);
@@ -65,6 +65,10 @@ public class RecipeTagService {
         User addedBy = null;
         if (addedByUserId != null) {
             addedBy = userService.findById(addedByUserId).orElseThrow(() -> new IllegalArgumentException("User not found with id: " + addedByUserId));
+        }
+
+        if (recipeTagRepository.existsByRecipeIdAndTagId(recipeId, tagId)) {
+            throw new IllegalStateException("Tag is already associated with this recipe");
         }
 
         RecipeTag recipeTag = RecipeTag.builder()
